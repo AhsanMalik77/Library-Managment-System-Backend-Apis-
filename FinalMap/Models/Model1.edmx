@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="lmsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="isbn" />
+          </Key>
+          <Property Name="isbn" Type="int" Nullable="false" />
+          <Property Name="btitle" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="publishdate" Type="date" />
+          <Property Name="price" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="totalcopies" Type="int" />
+        </EntityType>
+        <EntityType Name="Borrowbook">
+          <Key>
+            <PropertyRef Name="borrowid" />
+          </Key>
+          <Property Name="borrowid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="aridno" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="isbn" Type="int" Nullable="false" />
+          <Property Name="issuedate" Type="date" Nullable="false" />
+          <Property Name="returndate" Type="date" Nullable="false" />
+          <Property Name="actualreturndate" Type="date" Nullable="false" />
+          <Property Name="fineamount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="status" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="aridno" />
+          </Key>
+          <Property Name="aridno" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="fname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="section" Type="varchar" MaxLength="10" />
+          <Property Name="degree" Type="varchar" MaxLength="30" />
+          <Property Name="semester" Type="int" />
+          <Property Name="city" Type="varchar" MaxLength="30" />
+          <Property Name="image" Type="varchar" MaxLength="255" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'lms.dbo.userloc' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="userloc">
+          <Property Name="uname" Type="varchar" MaxLength="50" />
+          <Property Name="lat" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="lon" Type="decimal" Precision="10" Scale="0" />
+          <Property Name="datee" Type="date" />
+        </EntityType>-->
+        <Association Name="FK_Borrowbook_Book">
+          <End Role="Book" Type="Self.Book" Multiplicity="1" />
+          <End Role="Borrowbook" Type="Self.Borrowbook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book">
+              <PropertyRef Name="isbn" />
+            </Principal>
+            <Dependent Role="Borrowbook">
+              <PropertyRef Name="isbn" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrowbook_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="Borrowbook" Type="Self.Borrowbook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="aridno" />
+            </Principal>
+            <Dependent Role="Borrowbook">
+              <PropertyRef Name="aridno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="lmsModelStoreContainer">
+          <EntitySet Name="Book" EntityType="Self.Book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Borrowbook" EntityType="Self.Borrowbook" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Borrowbook_Book" Association="Self.FK_Borrowbook_Book">
+            <End Role="Book" EntitySet="Book" />
+            <End Role="Borrowbook" EntitySet="Borrowbook" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrowbook_Student" Association="Self.FK_Borrowbook_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="Borrowbook" EntitySet="Borrowbook" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="lmsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="isbn" />
+          </Key>
+          <Property Name="isbn" Type="Int32" Nullable="false" />
+          <Property Name="btitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="publishdate" Type="DateTime" Precision="0" />
+          <Property Name="price" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="totalcopies" Type="Int32" />
+          <NavigationProperty Name="Borrowbooks" Relationship="Self.FK_Borrowbook_Book" FromRole="Book" ToRole="Borrowbook" />
+        </EntityType>
+        <EntityType Name="Borrowbook">
+          <Key>
+            <PropertyRef Name="borrowid" />
+          </Key>
+          <Property Name="borrowid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="aridno" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="isbn" Type="Int32" Nullable="false" />
+          <Property Name="issuedate" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="returndate" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="actualreturndate" Type="DateTime" Precision="0" Nullable="false" />
+          <Property Name="fineamount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Book" Relationship="Self.FK_Borrowbook_Book" FromRole="Borrowbook" ToRole="Book" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_Borrowbook_Student" FromRole="Borrowbook" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="aridno" />
+          </Key>
+          <Property Name="aridno" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="section" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="degree" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="semester" Type="Int32" />
+          <Property Name="city" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="image" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Borrowbooks" Relationship="Self.FK_Borrowbook_Student" FromRole="Student" ToRole="Borrowbook" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Borrowbook_Book">
+          <End Role="Book" Type="Self.Book" Multiplicity="1" />
+          <End Role="Borrowbook" Type="Self.Borrowbook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Book">
+              <PropertyRef Name="isbn" />
+            </Principal>
+            <Dependent Role="Borrowbook">
+              <PropertyRef Name="isbn" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrowbook_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="Borrowbook" Type="Self.Borrowbook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="aridno" />
+            </Principal>
+            <Dependent Role="Borrowbook">
+              <PropertyRef Name="aridno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="lmsEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Books" EntityType="Self.Book" />
+          <EntitySet Name="Borrowbooks" EntityType="Self.Borrowbook" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <AssociationSet Name="FK_Borrowbook_Book" Association="Self.FK_Borrowbook_Book">
+            <End Role="Book" EntitySet="Books" />
+            <End Role="Borrowbook" EntitySet="Borrowbooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrowbook_Student" Association="Self.FK_Borrowbook_Student">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="Borrowbook" EntitySet="Borrowbooks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="lmsModelStoreContainer" CdmEntityContainer="lmsEntities1">
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="lmsModel.Book">
+              <MappingFragment StoreEntitySet="Book">
+                <ScalarProperty Name="isbn" ColumnName="isbn" />
+                <ScalarProperty Name="btitle" ColumnName="btitle" />
+                <ScalarProperty Name="publishdate" ColumnName="publishdate" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="totalcopies" ColumnName="totalcopies" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Borrowbooks">
+            <EntityTypeMapping TypeName="lmsModel.Borrowbook">
+              <MappingFragment StoreEntitySet="Borrowbook">
+                <ScalarProperty Name="borrowid" ColumnName="borrowid" />
+                <ScalarProperty Name="aridno" ColumnName="aridno" />
+                <ScalarProperty Name="isbn" ColumnName="isbn" />
+                <ScalarProperty Name="issuedate" ColumnName="issuedate" />
+                <ScalarProperty Name="returndate" ColumnName="returndate" />
+                <ScalarProperty Name="actualreturndate" ColumnName="actualreturndate" />
+                <ScalarProperty Name="fineamount" ColumnName="fineamount" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="lmsModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="aridno" ColumnName="aridno" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="fname" ColumnName="fname" />
+                <ScalarProperty Name="section" ColumnName="section" />
+                <ScalarProperty Name="degree" ColumnName="degree" />
+                <ScalarProperty Name="semester" ColumnName="semester" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="image" ColumnName="image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
